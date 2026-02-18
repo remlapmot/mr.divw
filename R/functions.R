@@ -315,8 +315,7 @@ data_gen_individual<-function(case=c("case4","case5","case6","case7"),true_var=F
   p<-2000
   h<-sqrt(0.2) # 20% total heritability
   beta0<-0.4
-  standard_normal_random_effect<-mr.divw:::standard_normal_random_effect
-  gamma_coef<-standard_normal_random_effect*(h/sqrt(s))*sqrt(2)
+  gamma_coef<-stats::rnorm(p)*(h/sqrt(s))*sqrt(2)
   if(s<p){
     gamma_coef[(s+1):p]<-0
   }
