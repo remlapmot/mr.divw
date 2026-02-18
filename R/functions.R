@@ -167,10 +167,14 @@ var.divw<-function(lambda,pval.selection, beta, se.ratio, mu, tau.square, se.out
 #' )
 #'
 #' data(bmi.cad)
-#' attach(bmi.cad)
-#' lambda.opt<-mr.eo(0, beta.exposure, beta.outcome, se.exposure, se.outcome, pval.selection)$lambda.opt
-#' mr.divw(beta.exposure, beta.outcome, se.exposure, se.outcome, pval.selection=pval.selection, lambda=lambda.opt)
-#' detach(bmi.cad)
+#' lambda.opt <- with(bmi.cad,
+#'   mr.eo(0, beta.exposure, beta.outcome, se.exposure, se.outcome,
+#'     pval.selection)$lambda.opt
+#' )
+#' with(bmi.cad,
+#'   mr.divw(beta.exposure, beta.outcome, se.exposure, se.outcome,
+#'     pval.selection = pval.selection, lambda = lambda.opt)
+#' )
 #'
 mr.eo<-function(lambda.start, beta.exposure, beta.outcome, se.exposure, se.outcome, pval.selection, over.dispersion=FALSE, max_opt_iter=5){
   beta_res<-numeric(max_opt_iter)
