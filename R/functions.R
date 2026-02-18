@@ -1,5 +1,5 @@
 Phi.tilde<-function(x){
-  res<-pnorm(x,lower.tail = FALSE)
+  res<-stats::pnorm(x,lower.tail = FALSE)
   return(res)
 }
 
@@ -20,7 +20,7 @@ ivw<-function(beta.exposure, beta.outcome, se.exposure, se.outcome, alpha=0.05, 
   V2<-sum((se.ratio^2*mu^2)[ind])
   var_IVW<-V1/V2^2
   se_IVW<-sqrt(var_IVW)
-  c_alpha<-qnorm(alpha/2,lower.tail = FALSE)
+  c_alpha<-stats::qnorm(alpha/2,lower.tail = FALSE)
   CI_IVW.lower<-beta_IVW-c_alpha*se_IVW
   CI_IVW.upper<-beta_IVW+c_alpha*se_IVW
   return(list(beta.hat=beta_IVW,beta.se=se_IVW,n.IV=length(ind),IV=ind))
@@ -91,13 +91,13 @@ mr.divw<-function(beta.exposure, beta.outcome, se.exposure, se.outcome, alpha=0.
     V2<-sum((se.ratio^2*(mu^2-1))[ind])
     var_dIVW<-V1/V2^2
     se_dIVW<-sqrt(var_dIVW)
-    c_alpha<-qnorm(alpha/2,lower.tail = FALSE)
+    c_alpha<-stats::qnorm(alpha/2,lower.tail = FALSE)
     CI_dIVW.lower<-beta_dIVW-c_alpha*se_dIVW
     CI_dIVW.upper<-beta_dIVW+c_alpha*se_dIVW
     if(diagnostics){
       t<-(beta.outcome-beta_dIVW*beta.exposure)/sqrt(se.outcome^2+tau.square+beta_dIVW^2*se.exposure^2)
-      qqnorm(t)
-      qqline(t)
+      stats::qqnorm(t)
+      stats::qqline(t)
     }
   } else {
     gen_cov <- gen_cor * se.exposure * se.outcome
@@ -110,14 +110,14 @@ mr.divw<-function(beta.exposure, beta.outcome, se.exposure, se.outcome, alpha=0.
     V2<-sum((se.ratio^2*(mu^2-1))[ind])
     var_dIVW<-V1/V2^2
     se_dIVW<-sqrt(var_dIVW)
-    c_alpha<-qnorm(alpha/2,lower.tail = FALSE)
+    c_alpha<-stats::qnorm(alpha/2,lower.tail = FALSE)
     CI_dIVW.lower<-beta_dIVW-c_alpha*se_dIVW
     CI_dIVW.upper<-beta_dIVW+c_alpha*se_dIVW
     tau.square <- NULL # current version does not support estimation of overdispersion parameter in the case with overlapping datasets
     if(diagnostics){
       t<-(beta.outcome-beta_dIVW*beta.exposure)/sqrt(se.outcome^2+beta_dIVW^2*se.exposure^2-2*beta_dIVW*gen_cov)
-      qqnorm(t)
-      qqline(t)
+      stats::qqnorm(t)
+      stats::qqline(t)
     }
   }
   return(list(beta.hat=beta_dIVW,beta.se=se_dIVW,condition=condition,tau.square=tau.square,n.IV=length(ind),IV=ind))
@@ -182,7 +182,7 @@ mr.eo<-function(lambda.start, beta.exposure, beta.outcome, se.exposure, se.outco
   var_res<-numeric(max_opt_iter)
   se.ratio<-se.exposure/se.outcome
   mu<-beta.exposure/se.exposure
-  max_lambda<-qnorm(min(pval.selection)/2,lower.tail = FALSE)
+  max_lambda<-stats::qnorm(min(pval.selection)/2,lower.tail = FALSE)
   opt_right_end<-min(max_lambda,sqrt(2*log(length(beta.exposure))))
   iter<-1
   lambda_res[iter]<-lambda.start
@@ -195,14 +195,14 @@ mr.eo<-function(lambda.start, beta.exposure, beta.outcome, se.exposure, se.outco
   beta_res[iter]<-tmp$beta.hat
   tau.square<-tmp$tau.square
   var_res[iter]<-var.divw(lambda_res[iter],pval.selection,beta_res[iter],se.ratio,mu,tau.square,se.outcome)
-  lambda_res[iter+1]<-optimize(var.divw,c(0,opt_right_end),tol=0.001,pval.selection=pval.selection,beta=beta_res[iter],
+  lambda_res[iter+1]<-stats::optimize(var.divw,c(0,opt_right_end),tol=0.001,pval.selection=pval.selection,beta=beta_res[iter],
                                se.ratio=se.ratio,mu=mu, tau.square=tau.square,se.outcome=se.outcome)$minimum
   iter<-2
   beta_res[iter]<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection=pval.selection,
                        lambda=lambda_res[iter], over.dispersion = over.dispersion)$beta.hat
   var_res[iter]<-var.divw(lambda_res[iter],pval.selection,beta_res[iter],se.ratio,mu,tau.square,se.outcome)
   while(iter<=max_opt_iter & var_res[iter]<var_res[iter-1]){
-    lambda_res[iter+1]<-optimize(var.divw,c(0,opt_right_end),tol=0.001,pval.selection=pval.selection,beta=beta_res[iter],
+    lambda_res[iter+1]<-stats::optimize(var.divw,c(0,opt_right_end),tol=0.001,pval.selection=pval.selection,beta=beta_res[iter],
                                  se.ratio=se.ratio,mu=mu, tau.square=tau.square,se.outcome=se.outcome)$minimum
     iter<-iter+1
     beta_res[iter]<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection=pval.selection,
@@ -238,18 +238,18 @@ data_gen_summary<-function(case=c("case1","case2","case3","case3_pleiotropy")){
     useful_df<-data.frame(se.exposure=bmi.cad$se.exposure[strong_ind],
                           se.outcome=bmi.cad$se.outcome[strong_ind],
                           se.selection=bmi.cad$se.selection[strong_ind])
-    useful_df$beta.exposure<-rnorm(s,mean=strong_pi,sd = useful_df$se.exposure)
-    useful_df$beta.outcome<-rnorm(s,mean=beta0*strong_pi,sd=useful_df$se.outcome)
-    useful_df$beta.selection<-rnorm(s,mean=strong_pi,sd = useful_df$se.selection)
+    useful_df$beta.exposure<-stats::rnorm(s,mean=strong_pi,sd = useful_df$se.exposure)
+    useful_df$beta.outcome<-stats::rnorm(s,mean=beta0*strong_pi,sd=useful_df$se.outcome)
+    useful_df$beta.selection<-stats::rnorm(s,mean=strong_pi,sd = useful_df$se.selection)
     useful_df$relevant.ind<-1
     null_df<-data.frame(se.exposure=null_se.exposure,se.outcome=null_se.outcome,se.selection=null_se.selection)
-    null_df$beta.exposure<-rnorm(p-s,0,sd=null_df$se.exposure)
-    null_df$beta.outcome<-rnorm(p-s,0,sd=null_df$se.outcome)
-    null_df$beta.selection<-rnorm(p-s,0,sd=null_df$se.selection)
+    null_df$beta.exposure<-stats::rnorm(p-s,0,sd=null_df$se.exposure)
+    null_df$beta.outcome<-stats::rnorm(p-s,0,sd=null_df$se.outcome)
+    null_df$beta.selection<-stats::rnorm(p-s,0,sd=null_df$se.selection)
     null_df$relevant.ind<-0
     full_df<-rbind(useful_df,null_df)
-    full_df$pval.exposure<-2*pnorm(abs(full_df$beta.exposure)/full_df$se.exposure,lower.tail = FALSE)
-    full_df$pval.selection<-2*pnorm(abs(full_df$beta.selection)/full_df$se.selection,lower.tail = FALSE)
+    full_df$pval.exposure<-2*stats::pnorm(abs(full_df$beta.exposure)/full_df$se.exposure,lower.tail = FALSE)
+    full_df$pval.selection<-2*stats::pnorm(abs(full_df$beta.selection)/full_df$se.selection,lower.tail = FALSE)
     full_df$z.exposure<-full_df$beta.exposure/full_df$se.exposure
   }else if (case=="case2"){
     s<-100
@@ -262,34 +262,34 @@ data_gen_summary<-function(case=c("case1","case2","case3","case3_pleiotropy")){
     useful_df<-data.frame(se.exposure=bmi.cad$se.exposure[weak_ind],
                           se.outcome=bmi.cad$se.outcome[weak_ind],
                           se.selection=bmi.cad$se.selection[weak_ind])
-    useful_df$beta.exposure<-rnorm(s,mean=weak_pi,sd = useful_df$se.exposure)
-    useful_df$beta.outcome<-rnorm(s,mean=beta0*weak_pi,sd=useful_df$se.outcome)
-    useful_df$beta.selection<-rnorm(s,mean=weak_pi,sd = useful_df$se.selection)
+    useful_df$beta.exposure<-stats::rnorm(s,mean=weak_pi,sd = useful_df$se.exposure)
+    useful_df$beta.outcome<-stats::rnorm(s,mean=beta0*weak_pi,sd=useful_df$se.outcome)
+    useful_df$beta.selection<-stats::rnorm(s,mean=weak_pi,sd = useful_df$se.selection)
     useful_df$relevant.ind<-1
     null_df<-data.frame(se.exposure=null_se.exposure,se.outcome=null_se.outcome,se.selection=null_se.selection)
-    null_df$beta.exposure<-rnorm(p-s,0,sd=null_df$se.exposure)
-    null_df$beta.outcome<-rnorm(p-s,0,sd=null_df$se.outcome)
-    null_df$beta.selection<-rnorm(p-s,0,sd=null_df$se.selection)
+    null_df$beta.exposure<-stats::rnorm(p-s,0,sd=null_df$se.exposure)
+    null_df$beta.outcome<-stats::rnorm(p-s,0,sd=null_df$se.outcome)
+    null_df$beta.selection<-stats::rnorm(p-s,0,sd=null_df$se.selection)
     null_df$relevant.ind<-0
     full_df<-rbind(useful_df,null_df)
-    full_df$pval.exposure<-2*pnorm(abs(full_df$beta.exposure)/full_df$se.exposure,lower.tail = FALSE)
-    full_df$pval.selection<-2*pnorm(abs(full_df$beta.selection)/full_df$se.selection,lower.tail = FALSE)
+    full_df$pval.exposure<-2*stats::pnorm(abs(full_df$beta.exposure)/full_df$se.exposure,lower.tail = FALSE)
+    full_df$pval.selection<-2*stats::pnorm(abs(full_df$beta.selection)/full_df$se.selection,lower.tail = FALSE)
     full_df$z.exposure<-full_df$beta.exposure/full_df$se.exposure
   }else if (case %in% c("case3","case3_pleiotropy")){
     full_df<-data.frame(se.exposure=bmi.cad$se.exposure,
                         se.outcome=bmi.cad$se.outcome,
                         se.selection=bmi.cad$se.selection)
-    full_df$beta.exposure<-rnorm(p,mean=pi,sd=full_df$se.exposure)
+    full_df$beta.exposure<-stats::rnorm(p,mean=pi,sd=full_df$se.exposure)
     if(case=="case3_pleiotropy"){
-      alpha<-rnorm(p,0,2/p*sum(full_df$se.outcome))
+      alpha<-stats::rnorm(p,0,2/p*sum(full_df$se.outcome))
     }else{
       alpha<-rep(0,p)
     }
-    full_df$beta.outcome<-rnorm(p,mean=pi*beta0+alpha,sd=full_df$se.outcome)
-    full_df$beta.selection<-rnorm(p,mean=pi,sd=full_df$se.selection)
+    full_df$beta.outcome<-stats::rnorm(p,mean=pi*beta0+alpha,sd=full_df$se.outcome)
+    full_df$beta.selection<-stats::rnorm(p,mean=pi,sd=full_df$se.selection)
     full_df$relevant.ind<-1
-    full_df$pval.exposure<-2*pnorm(abs(full_df$beta.exposure)/full_df$se.exposure,lower.tail = FALSE)
-    full_df$pval.selection<-2*pnorm(abs(full_df$beta.selection)/full_df$se.selection,lower.tail = FALSE)
+    full_df$pval.exposure<-2*stats::pnorm(abs(full_df$beta.exposure)/full_df$se.exposure,lower.tail = FALSE)
+    full_df$pval.selection<-2*stats::pnorm(abs(full_df$beta.selection)/full_df$se.selection,lower.tail = FALSE)
     full_df$z.exposure<-full_df$beta.exposure/full_df$se.exposure
   }
   return(full_df)
@@ -334,12 +334,12 @@ data_gen_individual<-function(case=c("case4","case5","case6","case7"),true_var=F
   data_gen_onesample<-function(){
     z<-matrix(nrow=n,ncol=p)
     for(j in 1:p){
-      tmp<-rmultinom(n,1,c(0.25,0.5,0.25)) # z's are independent
+      tmp<-stats::rmultinom(n,1,c(0.25,0.5,0.25)) # z's are independent
       z[,j]<-0*(tmp[1,]==1)+1*(tmp[2,]==1)+2*(tmp[3,]==1)
     }
-    u<-rnorm(n,0,sqrt((1-h^2)*0.6))
-    x<-z[,1:s] %*% gamma_coef[1:s] +u+rnorm(n,0,sqrt((1-h^2)*0.4))
-    y<-10+beta0*x+u+rnorm(n)
+    u<-stats::rnorm(n,0,sqrt((1-h^2)*0.6))
+    x<-z[,1:s] %*% gamma_coef[1:s] +u+stats::rnorm(n,0,sqrt((1-h^2)*0.4))
+    y<-10+beta0*x+u+stats::rnorm(n)
     return(list(z=z,x=x,y=y))
   }
   tmp1<-data_gen_onesample() # exposure dataset
@@ -347,15 +347,15 @@ data_gen_individual<-function(case=c("case4","case5","case6","case7"),true_var=F
   tmp3<-data_gen_onesample() # selection dataset
   full_df<-data.frame(beta.exposure=numeric(p))
   full_df$beta.exposure<-sapply(1:p, function(i) {
-    coef <- lm(tmp1$x ~ tmp1$z[,i])$coef[-1]
+    coef <- stats::lm(tmp1$x ~ tmp1$z[,i])$coef[-1]
     return(coef)
   })
   full_df$beta.outcome<-sapply(1:p, function(i) {
-    coef <- lm(tmp2$y ~ tmp2$z[,i])$coef[-1]
+    coef <- stats::lm(tmp2$y ~ tmp2$z[,i])$coef[-1]
     return(coef)
   })
   full_df$beta.selection<-sapply(1:p, function(i) {
-    coef <- lm(tmp3$x ~ tmp3$z[,i])$coef[-1]
+    coef <- stats::lm(tmp3$x ~ tmp3$z[,i])$coef[-1]
     return(coef)
   })
   full_df$relevant.ind<-0
@@ -367,21 +367,21 @@ data_gen_individual<-function(case=c("case4","case5","case6","case7"),true_var=F
     full_df$se.selection<-sigma_xj_true # true sd
   }else{
     full_df$se.exposure<-sapply(1:p, function(i) {
-      se <- summary( lm(tmp1$x ~ tmp1$z[,i]))$coefficients[2,2]
+      se <- summary( stats::lm(tmp1$x ~ tmp1$z[,i]))$coefficients[2,2]
       return(se)
     })
     full_df$se.outcome<-sapply(1:p, function(i) {
-      se <- summary( lm(tmp2$y ~ tmp2$z[,i]))$coefficients[2,2]
+      se <- summary( stats::lm(tmp2$y ~ tmp2$z[,i]))$coefficients[2,2]
       return(se)
     })
     full_df$se.selection<-sapply(1:p, function(i) {
-      se <- summary(lm(tmp3$x ~ tmp3$z[,i]))$coefficients[2,2]
+      se <- summary(stats::lm(tmp3$x ~ tmp3$z[,i]))$coefficients[2,2]
       return(se)
     })
   }
   #####################
-  full_df$pval.exposure<-2*pnorm(abs(full_df$beta.exposure)/full_df$se.exposure,lower.tail = FALSE)
-  full_df$pval.selection<-2*pnorm(abs(full_df$beta.selection)/full_df$se.selection,lower.tail = FALSE)
+  full_df$pval.exposure<-2*stats::pnorm(abs(full_df$beta.exposure)/full_df$se.exposure,lower.tail = FALSE)
+  full_df$pval.selection<-2*stats::pnorm(abs(full_df$beta.selection)/full_df$se.selection,lower.tail = FALSE)
   full_df$z.exposure<-full_df$beta.exposure/full_df$se.exposure
   return(full_df)
 }
