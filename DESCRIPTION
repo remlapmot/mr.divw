@@ -10,6 +10,6 @@ Description: Perform causal effect estimation for summary-data Mendelian randomi
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3
 Depends: 
     R (>= 2.10)
