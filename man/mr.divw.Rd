@@ -58,9 +58,9 @@ Main function for dIVW
 \examples{
 
 data(bmi.cad)
-attach(bmi.cad)
-mr.divw(beta.exposure, beta.outcome, se.exposure, se.outcome, diagnostics=TRUE)
-detach(bmi.cad)
+with(bmi.cad,
+  mr.divw(beta.exposure, beta.outcome, se.exposure, se.outcome, diagnostics=TRUE)
+)
 
 }
 \references{
