@@ -156,11 +156,15 @@ var.divw<-function(lambda,pval.selection, beta, se.ratio, mu, tau.square, se.out
 #' @export
 #' @examples
 #'
-#' df<-data_gen_summary("case1")
-#' attach(df)
-#' lambda.opt<-mr.eo(0, beta.exposure, beta.outcome, se.exposure, se.outcome, pval.selection)$lambda.opt
-#' mr.divw(beta.exposure, beta.outcome, se.exposure, se.outcome, pval.selection=pval.selection, lambda=lambda.opt)
-#' detach(df)
+#' df <- data_gen_summary("case1")
+#' lambda.opt <- with(df,
+#'   mr.eo(0, beta.exposure, beta.outcome, se.exposure, se.outcome,
+#'     pval.selection)$lambda.opt
+#' )
+#' with(df,
+#'   mr.divw(beta.exposure, beta.outcome, se.exposure, se.outcome,
+#'     pval.selection = pval.selection, lambda = lambda.opt)
+#' )
 #'
 #' data(bmi.cad)
 #' attach(bmi.cad)
