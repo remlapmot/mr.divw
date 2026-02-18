@@ -58,9 +58,9 @@ ivw<-function(beta.exposure, beta.outcome, se.exposure, se.outcome, alpha=0.05, 
 #' @examples
 #'
 #' data(bmi.cad)
-#' attach(bmi.cad)
-#' mr.divw(beta.exposure, beta.outcome, se.exposure, se.outcome, diagnostics=TRUE)
-#' detach(bmi.cad)
+#' with(bmi.cad,
+#'   mr.divw(beta.exposure, beta.outcome, se.exposure, se.outcome, diagnostics=TRUE)
+#' )
 #'
 mr.divw<-function(beta.exposure, beta.outcome, se.exposure, se.outcome, alpha=0.05, pval.selection=NULL,lambda=0, over.dispersion=FALSE,diagnostics=FALSE,overlap=FALSE,gen_cor=0){
   if(lambda==0){
