@@ -217,7 +217,7 @@ mr.eo<-function(lambda.start, beta.exposure, beta.outcome, se.exposure, se.outco
 data_gen_summary<-function(case=c("case1","case2","case3","case3_pleiotropy")){
   p<-1119
   beta0<-0.4
-  data(bmi.cad)
+  utils::data(bmi.cad)
   pi<-bmi.cad$beta.exposure
   if(case=="case1"){
     s<-20
@@ -391,7 +391,7 @@ table_publish<-function(){
   res<-matrix(data=NA, nrow = 6, ncol=5)
   rownames(res)<-c("lambda","n_IV","condition","IVW","dIVW","dIVW_alpha")
   res[1,1:3]<-c(0, 5.45, round(sqrt(2*log(1119)),2))
-  data("bmi.cad")
+  utils::data("bmi.cad")
   attach(bmi.cad)
   tmp<-ivw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=0)
   res[4,1]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
