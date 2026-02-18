@@ -10,7 +10,7 @@ mvmr.srivw(
   beta.outcome,
   se.outcome,
   phi_cand = 0,
-  over.dispersion = FALSE,
+  over.dispersion = TRUE,
   overlap = FALSE,
   gen_cor = NULL
 )
@@ -26,7 +26,7 @@ mvmr.srivw(
 
 \item{phi_cand}{A vector of tuning parameters for SRIVW estimator. Default is 0. To use the recommended set for the tuning parameter, simply set phi_cand = NULL.}
 
-\item{over.dispersion}{Should the model consider balanced horizontal pleiotropy? Default is FALSE.}
+\item{over.dispersion}{Should the model consider balanced horizontal pleiotropy? Default is TRUE.}
 
 \item{overlap}{Should the model consider overlapping exposure and outcome datasets? Default is FALSE.}
 
