@@ -391,44 +391,47 @@ table_publish<-function(){
   rownames(res)<-c("lambda","n_IV","condition","IVW","dIVW","dIVW_alpha")
   res[1,1:3]<-c(0, 5.45, round(sqrt(2*log(1119)),2))
   utils::data("bmi.cad")
-  attach(bmi.cad)
-  tmp<-ivw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=0)
+  be <- bmi.cad$beta.exposure
+  bo <- bmi.cad$beta.outcome
+  se.e <- bmi.cad$se.exposure
+  se.o <- bmi.cad$se.outcome
+  ps <- bmi.cad$pval.selection
+  tmp<-ivw(be,bo,se.e,se.o,pval.selection = ps,lambda=0)
   res[4,1]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
   res[2,1]<-tmp$n.IV
-  tmp<-ivw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=5.45)
+  tmp<-ivw(be,bo,se.e,se.o,pval.selection = ps,lambda=5.45)
   res[4,2]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
   res[2,2]<-tmp$n.IV
-  tmp<-ivw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=sqrt(2*log(1119)))
+  tmp<-ivw(be,bo,se.e,se.o,pval.selection = ps,lambda=sqrt(2*log(1119)))
   res[4,3]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
   res[2,3]<-tmp$n.IV
-  tmp<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=0)
+  tmp<-mr.divw(be,bo,se.e,se.o,pval.selection = ps,lambda=0)
   res[5,1]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
   res[3,1]<-round(tmp$condition,1)
-  tmp<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=5.45)
+  tmp<-mr.divw(be,bo,se.e,se.o,pval.selection = ps,lambda=5.45)
   res[5,2]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
   res[3,2]<-round(tmp$condition,1)
-  tmp<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=sqrt(2*log(1119)))
+  tmp<-mr.divw(be,bo,se.e,se.o,pval.selection = ps,lambda=sqrt(2*log(1119)))
   res[5,3]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
   res[3,3]<-round(tmp$condition,1)
-  lambda.opt<-mr.eo(sqrt(2*log(1119)),beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection)$lambda.opt
+  lambda.opt<-mr.eo(sqrt(2*log(1119)),be,bo,se.e,se.o,ps)$lambda.opt
   res[1,4]<-round(lambda.opt,2)
-  tmp<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=lambda.opt)
+  tmp<-mr.divw(be,bo,se.e,se.o,pval.selection = ps,lambda=lambda.opt)
   res[5,4]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
   res[3,4]<-round(tmp$condition,1)
   res[2,4]<-tmp$n.IV
-  tmp<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=0,over.dispersion = TRUE)
+  tmp<-mr.divw(be,bo,se.e,se.o,pval.selection = ps,lambda=0,over.dispersion = TRUE)
   res[6,1]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
-  tmp<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=5.45,over.dispersion = TRUE)
+  tmp<-mr.divw(be,bo,se.e,se.o,pval.selection = ps,lambda=5.45,over.dispersion = TRUE)
   res[6,2]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
-  tmp<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=sqrt(2*log(1119)),over.dispersion = TRUE)
+  tmp<-mr.divw(be,bo,se.e,se.o,pval.selection = ps,lambda=sqrt(2*log(1119)),over.dispersion = TRUE)
   res[6,3]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
-  lambda.opt<-mr.eo(sqrt(2*log(1119)),beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection,TRUE)$lambda.opt
+  lambda.opt<-mr.eo(sqrt(2*log(1119)),be,bo,se.e,se.o,ps,TRUE)$lambda.opt
   res[1,5]<-round(lambda.opt,2)
-  tmp<-mr.divw(beta.exposure,beta.outcome,se.exposure,se.outcome,pval.selection = pval.selection,lambda=lambda.opt,over.dispersion = TRUE)
+  tmp<-mr.divw(be,bo,se.e,se.o,pval.selection = ps,lambda=lambda.opt,over.dispersion = TRUE)
   res[6,4]<-paste0(round(tmp$beta.hat,3)," (",round(tmp$beta.se,3),")")
   res[2,5]<-tmp$n.IV
   res[3,5]<-round(tmp$condition,1)
-  detach(bmi.cad)
   return(res)
 }
 
