@@ -1,13 +1,17 @@
 Package: mr.divw
-Title: debiased inverse-variance weighted estimator for univariable and multivariable Mendelian randomization
+Title: debiased inverse-variance weighted estimator for univariable and
+    multivariable Mendelian randomization
 Version: 0.1.0
-Authors@R: c(person("Ting", "Ye", , "tingye1@uw.edu", role = c("aut", "cre")),
-          person("Yinxiang", "Wu", , "wuyx@uw.edu", role = c("aut"),
-           comment = c(ORCID = "0000-0001-7806-6999")))
-Description: Perform causal effect estimation for summary-data Mendelian randomization using IVW, dIVW and MV-SRIVW estimators.
+Authors@R: c(
+    person("Ting", "Ye", , "tingye1@uw.edu", role = c("aut", "cre")),
+    person("Yinxiang", "Wu", , "wuyx@uw.edu", role = "aut",
+           comment = c(ORCID = "0000-0001-7806-6999"))
+  )
+Description: Perform causal effect estimation for summary-data Mendelian
+    randomization using IVW, dIVW and MV-SRIVW estimators.
 License: MIT + file LICENSE
+Depends: 
+    R (>= 3.5)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
-Depends: 
-    R (>= 3.5)
